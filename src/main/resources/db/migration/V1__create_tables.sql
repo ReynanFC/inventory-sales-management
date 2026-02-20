@@ -1,0 +1,54 @@
+CREATE TABLE CATEGORY(
+                         IDCATEGORY BIGINT PRIMARY KEY AUTO_INCREMENT,
+                         NAME VARCHAR(30) NOT NULL,
+                         DESCRIPTION VARCHAR(225) NOT NULL
+);
+
+CREATE TABLE PRODUCT(
+                        IDPRODUCT BIGINT PRIMARY KEY AUTO_INCREMENT,
+                        NAME VARCHAR(150) NOT NULL,
+                        DESCRIPTION VARCHAR(255) NOT NULL,
+                        PRICE DECIMAL(10,2) NOT NULL,
+                        QUANTITY_IN_STOCK INT NOT NULL CHECK(QUANTITY_IN_STOCK >= 0),
+                        MINIMUM_STOCK INT NOT NULL CHECK(MINIMUM_STOCK >= 0),
+                        ID_CATEGORY BIGINT NOT NULL,
+                        FOREIGN KEY (ID_CATEGORY) REFERENCES CATEGORY (IDCATEGORY),
+                        CREATED_AT TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+                        UPDATED_AT TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+                            ON UPDATE CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE CUSTOMER(
+                         IDCUSTOMER BIGINT PRIMARY KEY AUTO_INCREMENT,
+                         NAME VARCHAR(30) NOT NULL,
+                         TELEPHONE CHAR(15),
+                         EMAIL VARCHAR(225) NOT NULL UNIQUE,
+                         CREATED_AT TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+);
+
+CREATE TABLE SALE(
+                     IDSALE BIGINT PRIMARY KEY AUTO_INCREMENT,
+                     SALE_DATE TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+                     ID_CUSTOMER BIGINT NOT NULL,
+                     FOREIGN KEY (ID_CUSTOMER) REFERENCES CUSTOMER (IDCUSTOMER),
+                     STATUS_SALE ENUM("PEDING","COMPLETED", "CANCELED") NOT NULL,
+                     CREATED_AT TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL
+);
+
+CREATE TABLE SALE_ITEM(
+                          IDSALE_ITEM BIGINT PRIMARY KEY AUTO_INCREMENT,
+                          ID_SALE BIGINT NOT NULL,
+                          ID_PRODUCT BIGINT,
+                          FOREIGN KEY (ID_SALE) REFERENCES SALE (IDSALE),
+                          FOREIGN KEY (ID_PRODUCT) REFERENCES PRODUCT (IDPRODUCT),
+                          QUANTITY INT NOT NULL CHECK(QUANTITY > 0),
+                          UNIT_PRICE DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE STOCK_MOVEMENT(
+                               IDSTOCK_MOVEMENT BIGINT PRIMARY KEY AUTO_INCREMENT,
+                               ID_PRODUCT BIGINT,
+                               MOVEMENT_TYPE ENUM("ENTRY", "EXIT") NOT NULL,
+                               QUANTITY INT NOT NULL CHECK(QUANTITY > 0),
+                               MOVEMENT_DATETIME TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL
+);
