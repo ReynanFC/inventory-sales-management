@@ -1,14 +1,24 @@
 package com.reynan.inventorysalesmanagement.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+
+import static com.reynan.inventorysalesmanagement.entities.enums.MovementType.ENTRY;
 
 @Entity
 @Table(name = "PRODUCT")
-public class Product {
+public class Product implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,22 +44,28 @@ public class Product {
     @JoinColumn(name = "ID_CATEGORY")
     private Category category;
 
-   // private List<StockMovement> stockMovements = new ArrayList<StockMovement>();
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.PERSIST
+    )
+    private List<StockMovement> stockMovements = new ArrayList<StockMovement>();
 
+    @CreationTimestamp
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 
+    //The update cannot be valid for stock update but rather for StockMoviment
     @Column(name = "UPDATED_AT")
     private LocalDateTime updateAt;
 
     public Product() {}
 
     public Product(Category category,
-                   Integer minimumStock, Integer quantityInStock, BigDecimal price, String name) {
+                   Integer minimumStock, BigDecimal price, String name) {
 
         this.category = category;
+        this.quantityInStock= 0;
         this.minimumStock = minimumStock;
-        this.quantityInStock = quantityInStock;
         this.price = price;
         this.name = name;
     }
@@ -82,10 +98,6 @@ public class Product {
         return quantityInStock;
     }
 
-    public void setQuantityInStock(Integer quantityInStock) {
-        this.quantityInStock = quantityInStock;
-    }
-
     public Integer getMinimumStock() {
         return minimumStock;
     }
@@ -102,9 +114,9 @@ public class Product {
         this.category = category;
     }
 
-//    public List<StockMovement> getStockMovements() {
-//        return stockMovements;
-//    }
+    public List<StockMovement> getStockMovements() {
+        return Collections.unmodifiableList(stockMovements);
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -120,6 +132,34 @@ public class Product {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public void addStockMoviment(StockMovement stockMovement) {
+        stockMovements.add(stockMovement);
+        stockMovement.setProduct(this);
+
+        if (stockMovement.getMovementType() == ENTRY) {
+            increaseStock(stockMovement.getQuantity());
+        } else {
+            decreaseStock(stockMovement.getQuantity());
+        }
+    }
+
+    public void increaseStock(int amount) {
+//        if (amount <= 0) {
+//            exception...
+//        }
+
+        this.quantityInStock += amount;
+    }
+
+    public void decreaseStock(int amount) {
+
+//        if (quantityInStock - amount < 0 ) {
+//            exception...
+//        }
+
+        this.quantityInStock -= amount;
     }
 
     @Override
