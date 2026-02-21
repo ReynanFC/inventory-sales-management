@@ -2,6 +2,8 @@ package com.reynan.inventorysalesmanagement.entities;
 
 import com.reynan.inventorysalesmanagement.entities.enums.SaleStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -40,6 +42,7 @@ public class Sale implements Serializable {
     )
     private List<SaleItem> saleItems = new ArrayList<>();
 
+    @CreationTimestamp
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 
