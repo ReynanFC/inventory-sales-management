@@ -2,6 +2,7 @@ package com.reynan.inventorysalesmanagement.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -24,7 +25,8 @@ public class Category {
     @OneToMany(
             mappedBy = "category",
             cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
     )
     private Set<Product> products = new HashSet<Product>();
 
@@ -60,15 +62,17 @@ public class Category {
     }
 
     public Set<Product> getProducts() {
-        return products;
+        return Collections.unmodifiableSet(products);
     }
 
     public void addProduct(Product product) {
         products.add(product);
+        product.setCategory(this);
     }
 
     public void removeProduct(Product product) {
         products.remove(product);
+        product.setCategory(null);
     }
 
     @Override

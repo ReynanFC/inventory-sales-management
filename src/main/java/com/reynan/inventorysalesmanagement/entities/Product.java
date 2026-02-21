@@ -44,11 +44,9 @@ public class Product {
 
     public Product() {}
 
-    public Product(LocalDateTime updateAt, LocalDateTime createdAt, Category category,
+    public Product(Category category,
                    Integer minimumStock, Integer quantityInStock, BigDecimal price, String name) {
 
-        this.updateAt = updateAt;
-        this.createdAt = createdAt;
         this.category = category;
         this.minimumStock = minimumStock;
         this.quantityInStock = quantityInStock;
