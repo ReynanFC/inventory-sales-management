@@ -28,7 +28,7 @@ public class SaleItem implements Serializable {
     private Integer quantity;
 
     @Column(name = "UNIT_PRICE")
-    private BigDecimal price;
+    private BigDecimal unitPrice;
 
     public SaleItem() {}
 
@@ -36,7 +36,7 @@ public class SaleItem implements Serializable {
         this.sale = sale;
         this.product = product;
         this.quantity = quantity;
-        this.price = price;
+        this.unitPrice = price;
     }
 
     public Long getId() {
@@ -71,16 +71,16 @@ public class SaleItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public BigDecimal getSubTotal() {
-        return price.multiply(BigDecimal.valueOf(quantity));
+        return unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
     @Override
