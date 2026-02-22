@@ -79,7 +79,7 @@ public class SaleItem implements Serializable {
         this.price = price;
     }
 
-    public BigDecimal subTotal() {
+    public BigDecimal getSubTotal() {
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 
