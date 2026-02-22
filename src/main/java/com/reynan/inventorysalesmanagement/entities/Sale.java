@@ -3,7 +3,6 @@ package com.reynan.inventorysalesmanagement.entities;
 import com.reynan.inventorysalesmanagement.entities.enums.SaleStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,9 +21,6 @@ public class Sale implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "SALE_DATE")
-    private LocalDateTime saleDate;
 
     @ManyToOne
     @JoinColumn(name = "ID_CUSTOMER")
@@ -48,8 +44,7 @@ public class Sale implements Serializable {
 
     public Sale() {}
 
-    public Sale(LocalDateTime saleDate, Customer customer, SaleStatus saleStatus) {
-        this.saleDate = saleDate;
+    public Sale(Customer customer, SaleStatus saleStatus) {
         this.customer = customer;
         this.saleStatus = saleStatus;
     }
@@ -60,14 +55,6 @@ public class Sale implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getSaleDate() {
-        return saleDate;
-    }
-
-    public void setSaleDate(LocalDateTime saleDate) {
-        this.saleDate = saleDate;
     }
 
     public Customer getCustomer() {
