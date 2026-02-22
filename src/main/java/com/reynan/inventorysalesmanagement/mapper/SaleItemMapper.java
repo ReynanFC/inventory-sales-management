@@ -19,7 +19,5 @@ public interface SaleItemMapper {
 
     @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "productName", source = "product.name")
-    @Mapping(target = "unitePrice", source = "price")
-    @Mapping(target = "subTotal", source = "subTotal")
     SaleItemResponseDTO  toResponseDTO(SaleItem entity);
 }
