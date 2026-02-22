@@ -85,9 +85,9 @@ public class Sale implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public BigDecimal totalAmount() {
+    public BigDecimal getTotalAmount() {
 
-       return saleItems.stream().map(SaleItem :: subTotal)
+       return saleItems.stream().map(SaleItem :: getSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal :: add);
     }
 
