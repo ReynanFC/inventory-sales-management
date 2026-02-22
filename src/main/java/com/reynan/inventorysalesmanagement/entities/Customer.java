@@ -2,10 +2,10 @@ package com.reynan.inventorysalesmanagement.entities;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,17 +35,20 @@ public class Customer implements Serializable {
     )
     private List<Sale> sales = new ArrayList<>();
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "CREATED_AT")
     private LocalDate createdAt;
 
+    @CreationTimestamp
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
+
     public Customer() {}
 
-    public Customer(String name, String telephone, String email, LocalDate createdAt) {
+    public Customer(String name, String telephone, String email) {
         this.name = name;
         this.telephone = telephone;
         this.email = email;
-        this.createdAt = createdAt;
     }
 
     public List<Sale> getSales() {
