@@ -1,0 +1,28 @@
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{1}: merge feature/exceptions: Fast-forward
+[33m7e17e60[m[33m ([m[1;32mfeature/services[m[33m)[m HEAD@{2}: reset: moving to HEAD
+[33m7e17e60[m[33m ([m[1;32mfeature/services[m[33m)[m HEAD@{3}: checkout: moving from feature/exceptions to feature/entities
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{4}: reset: moving to HEAD
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{5}: reset: moving to HEAD
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{6}: checkout: moving from feature/entities to feature/exceptions
+[33m7e17e60[m[33m ([m[1;32mfeature/services[m[33m)[m HEAD@{7}: reset: moving to HEAD~1
+[33m19dd396[m HEAD@{8}: checkout: moving from feature/exceptions to feature/entities
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{9}: checkout: moving from feature/entities to feature/exceptions
+[33m19dd396[m HEAD@{10}: checkout: moving from feature/exceptions to feature/entities
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{11}: reset: moving to HEAD
+[33me7a4dee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/entities[m[33m, [m[1;31morigin/feature/exceptions[m[33m, [m[1;32mfeature/exceptions[m[33m)[m HEAD@{12}: commit (amend): feature: create RestControllerAdvicer, StandardError and StockExceptions
+[33m215b75e[m HEAD@{13}: commit (amend): feature: create RestControllerAdvicer, StandardError and StockExceptions
+[33mf2eed9a[m HEAD@{14}: commit (amend): feature: create RestControllerAdvicer, StandardError and StockExceptions
+[33m19dd396[m HEAD@{15}: checkout: moving from feature/entities to feature/exceptions
+[33m19dd396[m HEAD@{16}: reset: moving to HEAD
+[33m19dd396[m HEAD@{17}: merge feature/exceptions: Fast-forward
+[33m34747ee[m[33m ([m[1;31morigin/feature/entities[m[33m)[m HEAD@{18}: checkout: moving from feature/exceptions to feature/entities
+[33m19dd396[m HEAD@{19}: commit: feature: create RestControllerAdvicer, StandardError and StockExceptions
+[33m7e17e60[m[33m ([m[1;32mfeature/services[m[33m)[m HEAD@{20}: checkout: moving from feature/services to feature/exceptions
+[33m7e17e60[m[33m ([m[1;32mfeature/services[m[33m)[m HEAD@{21}: merge feature/repository: Merge made by the 'ort' strategy.
+[33mf44158d[m[33m ([m[1;31morigin/feature/mapper[m[33m, [m[1;32mfeature/mapper[m[33m)[m HEAD@{22}: checkout: moving from feature/mapper to feature/services
+[33mf44158d[m[33m ([m[1;31morigin/feature/mapper[m[33m, [m[1;32mfeature/mapper[m[33m)[m HEAD@{23}: commit: feat: add mappers for entity conversion
+[33m9682897[m HEAD@{24}: commit (merge): Merge branch 'feature/entities' into feature/mapper
+[33mde1513a[m HEAD@{25}: reset: moving to HEAD
+[33mde1513a[m HEAD@{26}: checkout: moving from feature/entities to feature/mapper
+[33m34747ee[m[33m ([m[1;31morigin/feature/entities[m[33m)[m HEAD@{27}: commit (amend): refactor: add getSubTotal on SaleItem and getTotalAmout on Sale

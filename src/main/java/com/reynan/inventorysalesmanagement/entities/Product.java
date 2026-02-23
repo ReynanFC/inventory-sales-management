@@ -1,5 +1,6 @@
 package com.reynan.inventorysalesmanagement.entities;
 
+import com.reynan.inventorysalesmanagement.exceptions.StockException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -146,18 +147,23 @@ public class Product implements Serializable {
     }
 
     public void increaseStock(int amount) {
-//        if (amount <= 0) {
-//            exception...
-//        }
+
+        if (amount <= 0) {
+            throw new StockException("Amount must be greater than zero");
+        }
 
         this.quantityInStock += amount;
     }
 
     public void decreaseStock(int amount) {
 
-//        if (quantityInStock - amount < 0 ) {
-//            exception...
-//        }
+        if (amount <= 0) {
+            throw new StockException("Amount must be greater than zero");
+        }
+
+        if (this.quantityInStock - amount < 0) {
+            throw new StockException("Insufficient stock");
+        }
 
         this.quantityInStock -= amount;
     }
