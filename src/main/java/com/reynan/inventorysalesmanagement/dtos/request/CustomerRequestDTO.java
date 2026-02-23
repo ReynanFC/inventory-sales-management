@@ -16,7 +16,7 @@ public record CustomerRequestDTO(
     @Size(max = 225)
     String email,
 
-    @Size(min = 10)
+    @Size(min = 14, max = 15)
     @Pattern(
             regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}\\-[0-9]{4}$",
             message = "The phone number must be in the format: (DD) 9XXXX-XXXX"

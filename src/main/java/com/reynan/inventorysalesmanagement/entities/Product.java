@@ -152,7 +152,6 @@ public class Product implements Serializable {
             throw new StockException("Amount must be greater than zero");
         }
 
-
         this.quantityInStock += amount;
     }
 
@@ -165,7 +164,6 @@ public class Product implements Serializable {
         if (this.quantityInStock - amount < 0) {
             throw new StockException("Insufficient stock");
         }
-
 
         this.quantityInStock -= amount;
     }
