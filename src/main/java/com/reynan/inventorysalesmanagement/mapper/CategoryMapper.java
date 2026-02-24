@@ -1,6 +1,7 @@
 package com.reynan.inventorysalesmanagement.mapper;
 
 import com.reynan.inventorysalesmanagement.dtos.request.CategoryRequestDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.CategoryDetailResponseDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.CategoryResponseDTO;
 import com.reynan.inventorysalesmanagement.entities.Category;
 import org.mapstruct.Mapper;
@@ -19,6 +20,7 @@ public interface CategoryMapper {
     Category toEntity(CategoryRequestDTO requestDTO);
 
     CategoryResponseDTO toResponseDTO(Category category);
+    CategoryDetailResponseDTO toDetailResponseDTO(Category category);
 
     Set<CategoryResponseDTO> toSetResponseDTO(Set<Category> entities);
 }
