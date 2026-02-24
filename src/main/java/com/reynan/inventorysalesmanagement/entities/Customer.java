@@ -95,6 +95,14 @@ public class Customer implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public void addSale(Sale sale) {
         sales.add(sale);
     }
