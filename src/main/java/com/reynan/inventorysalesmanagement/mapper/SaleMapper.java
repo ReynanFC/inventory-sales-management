@@ -11,7 +11,8 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.ERROR)
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        uses = {SaleItemMapper.class})
 public interface SaleMapper {
 
     @Mapping(target = "id", ignore = true)

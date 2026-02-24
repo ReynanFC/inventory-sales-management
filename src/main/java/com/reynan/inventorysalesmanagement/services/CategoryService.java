@@ -3,25 +3,34 @@ package com.reynan.inventorysalesmanagement.services;
 import com.reynan.inventorysalesmanagement.dtos.request.CategoryRequestDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.CategoryResponseDTO;
 import com.reynan.inventorysalesmanagement.entities.Category;
+import com.reynan.inventorysalesmanagement.exceptions.ResourceNotFoundException;
 import com.reynan.inventorysalesmanagement.mapper.CategoryMapper;
 import com.reynan.inventorysalesmanagement.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class CategoryService {
 
-    private Logger logger = LoggerFactory.getLogger(CategoryService.class);
+    private final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+    private final CategoryMapper mapper;
+    private final CategoryRepository categoryRepository;
 
-    private CategoryMapper mapper;
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryMapper mapper, CategoryRepository categoryRepository) {
+        this.mapper = mapper;
+        this.categoryRepository = categoryRepository;
+    }
 
     public CategoryResponseDTO findById(Long id) {
 
         logger.debug("Finding Category with id: {}", id);
+
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> );
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         return mapper.toResponseDTO(category);
     }
@@ -41,7 +50,7 @@ public class CategoryService {
         logger.debug("Updating Category with id: {}", id);
 
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> );
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         logger.debug("Updating Category: {}", categoryRequestDTO.name());
 
@@ -54,19 +63,22 @@ public class CategoryService {
     }
 
     public void delete(Long id) {
+
         logger.debug("Deleting Category with id: {}", id);
 
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() ->);
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         categoryRepository.delete(category);
     }
 
-    public CategoryResponseDTO addProductToCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
-        logger.debug("Adding Product to Category with id: {}", id);
+    public Set<CategoryResponseDTO> findAll() {
 
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() ->);
+        logger.debug("Finding all Categories");
+
+        return mapper.toSetResponseDTO(
+                new HashSet<>(categoryRepository.findAll())
+        );
     }
 
 }

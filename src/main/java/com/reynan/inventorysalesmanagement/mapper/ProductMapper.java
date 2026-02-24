@@ -29,4 +29,6 @@ public interface ProductMapper {
     ProductResponseDTO toResponseDTO(Product entity);
 
     Set<ProductDetailResponseDTO> toSetDetailResponseDTO(Set<Product> entities);
+
+
 }
