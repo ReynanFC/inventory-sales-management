@@ -11,12 +11,13 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.ERROR)
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        uses = SaleItemMapper.class)
 public interface SaleMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customer", ignore = true)
-    @Mapping(target = "saleItems", ignore = true)
+    @Mapping(target = "saleItems", source = "items")
     @Mapping(target = "createdAt", ignore = true)
     Sale toEntity(SaleRequestDTO requestDTO);
 
