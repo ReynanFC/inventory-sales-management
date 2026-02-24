@@ -1,7 +1,7 @@
 package com.reynan.inventorysalesmanagement.mapper;
 
 import com.reynan.inventorysalesmanagement.dtos.request.ProductRequestDTO;
-import com.reynan.inventorysalesmanagement.dtos.response.ProductResponseDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.ProductDetailResponseDTO;
 import com.reynan.inventorysalesmanagement.entities.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,7 +24,7 @@ public interface ProductMapper {
 
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "categoryName", source = "category.name")
-    ProductResponseDTO toResponseDTO(Product entity);
+    ProductDetailResponseDTO toResponseDTO(Product entity);
 
-    Set<ProductResponseDTO> toSetResponseDTO(Set<Product> entities);
+    Set<ProductDetailResponseDTO> toSetResponseDTO(Set<Product> entities);
 }
