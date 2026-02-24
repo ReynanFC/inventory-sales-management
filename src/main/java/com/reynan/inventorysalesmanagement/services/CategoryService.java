@@ -9,6 +9,7 @@ import com.reynan.inventorysalesmanagement.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class CategoryService {
         return mapper.toResponseDTO(category);
     }
 
+    @Transactional
     public CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) {
 
         logger.debug("Creating new Category: {}", categoryRequestDTO.name());
@@ -45,6 +47,7 @@ public class CategoryService {
         return mapper.toResponseDTO(category);
     }
 
+    @Transactional
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
 
         logger.debug("Updating Category with id: {}", id);
@@ -62,6 +65,7 @@ public class CategoryService {
         );
     }
 
+    @Transactional
     public void delete(Long id) {
 
         logger.debug("Deleting Category with id: {}", id);
