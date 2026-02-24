@@ -14,5 +14,5 @@ public record ProductDetailResponseDTO(
         Long categoryId,
         String categoryName,
         LocalDateTime createdAt,
-        LocalDateTime updateAt
+        LocalDateTime updatedAt
 ) {}

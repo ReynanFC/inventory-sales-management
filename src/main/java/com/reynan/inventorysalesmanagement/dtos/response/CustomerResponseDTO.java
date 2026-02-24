@@ -12,5 +12,5 @@ public record CustomerResponseDTO(
         String email,
         String telephone,
         LocalDate createdAt,
-        LocalDateTime updateAt
+        LocalDateTime updatedAt
 ){}
