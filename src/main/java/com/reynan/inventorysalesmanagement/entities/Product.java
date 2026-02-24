@@ -56,7 +56,7 @@ public class Product implements Serializable {
 
     //The update cannot be valid for stock update but rather for StockMoviment
     @Column(name = "UPDATED_AT")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     public Product() {}
 
@@ -138,12 +138,12 @@ public class Product implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public void addStockMoviment(StockMovement stockMovement) {
