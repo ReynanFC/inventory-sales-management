@@ -16,7 +16,7 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "quantityInStock", ignore = true)
     @Mapping(target = "stockMovements", ignore = true)
     @Mapping(target = "category", ignore = true)
@@ -29,6 +29,4 @@ public interface ProductMapper {
     ProductResponseDTO toResponseDTO(Product entity);
 
     Set<ProductDetailResponseDTO> toSetDetailResponseDTO(Set<Product> entities);
-
-
 }

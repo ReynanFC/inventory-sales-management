@@ -12,7 +12,7 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
-        uses = {SaleItemMapper.class})
+        uses = SaleItemMapper.class)
 public interface SaleMapper {
 
     @Mapping(target = "id", ignore = true)

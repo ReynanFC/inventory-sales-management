@@ -3,7 +3,6 @@ package com.reynan.inventorysalesmanagement.entities;
 import com.reynan.inventorysalesmanagement.exceptions.StockException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -57,7 +56,7 @@ public class Product implements Serializable {
 
     //The update cannot be valid for stock update but rather for StockMoviment
     @Column(name = "UPDATED_AT")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     public Product() {}
 
@@ -115,6 +114,18 @@ public class Product implements Serializable {
         this.category = category;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setQuantityInStock(Integer quantityInStock) {
+        this.quantityInStock = quantityInStock;
+    }
+
     public List<StockMovement> getStockMovements() {
         return Collections.unmodifiableList(stockMovements);
     }
@@ -127,12 +138,12 @@ public class Product implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updateAt) {
+        this.updatedAt = updatedAt;
     }
 
     public void addStockMoviment(StockMovement stockMovement) {

@@ -1,11 +1,14 @@
 package com.reynan.inventorysalesmanagement.services;
 
 import com.reynan.inventorysalesmanagement.dtos.request.CustomerRequestDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.CustomerDetailResponseDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.CustomerResponseDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.SaleResponseDTO;
 import com.reynan.inventorysalesmanagement.entities.Customer;
 import com.reynan.inventorysalesmanagement.exceptions.ResourceNotFoundException;
 import com.reynan.inventorysalesmanagement.mapper.CustomerMapper;
 import com.reynan.inventorysalesmanagement.repository.CustomerRepository;
+import com.reynan.inventorysalesmanagement.repository.SaleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +22,13 @@ public class CustomerService {
     private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerMapper mapper;
     private final CustomerRepository customerRepository;
+    private final SaleRepository saleRepository;
 
-    public CustomerService(CustomerMapper mapper, CustomerRepository customerRepository) {
+    public CustomerService(CustomerMapper mapper, CustomerRepository customerRepository,
+                           SaleRepository saleRepository) {
         this.mapper = mapper;
         this.customerRepository = customerRepository;
+        this.saleRepository = saleRepository;
     }
 
     public CustomerResponseDTO findById(long id) {
@@ -80,7 +86,7 @@ public class CustomerService {
             return mapper.toSetResponseDTO(new HashSet<>(customerRepository.findAll()));
         }
 
-//        public List<CustomerResponseDTO> relatedSales() {
+//        public List<SaleResponseDTO> relatedSales(Long id) {
 //
 //
 //        }
