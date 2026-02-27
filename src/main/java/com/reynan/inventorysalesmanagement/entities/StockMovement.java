@@ -16,6 +16,7 @@ public class StockMovement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDSTOCK_MOVEMENT")
     private Long id;
 
     @ManyToOne
@@ -35,10 +36,9 @@ public class StockMovement implements Serializable {
 
     public StockMovement() {}
 
-    public StockMovement(Integer quantity, MovementType movementType, Product product) {
+    public StockMovement(Integer quantity, MovementType movementType) {
         this.quantity = quantity;
         this.movementType = movementType;
-        this.product = product;
     }
 
     public Long getId() {

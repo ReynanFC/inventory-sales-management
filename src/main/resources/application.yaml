@@ -10,11 +10,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
-        open-in-view: false
+      open-in-view: false
 
-  logging:
+logging:
     level:
      com.reynan.inventorysalesmanagement: DEBUG

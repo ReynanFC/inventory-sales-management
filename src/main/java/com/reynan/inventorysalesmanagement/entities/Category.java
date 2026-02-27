@@ -28,8 +28,7 @@ public class Category implements Serializable {
     @OneToMany(
             mappedBy = "category",
             cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true
+            fetch = FetchType.LAZY
     )
     private Set<Product> products = new HashSet<Product>();
 

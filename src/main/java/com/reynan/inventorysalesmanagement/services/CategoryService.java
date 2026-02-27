@@ -3,6 +3,7 @@ package com.reynan.inventorysalesmanagement.services;
 import com.reynan.inventorysalesmanagement.dtos.request.CategoryRequestDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.CategoryResponseDTO;
 import com.reynan.inventorysalesmanagement.entities.Category;
+import com.reynan.inventorysalesmanagement.exceptions.BusinessException;
 import com.reynan.inventorysalesmanagement.exceptions.ResourceNotFoundException;
 import com.reynan.inventorysalesmanagement.mapper.CategoryMapper;
 import com.reynan.inventorysalesmanagement.repository.CategoryRepository;
@@ -44,6 +45,8 @@ public class CategoryService {
         Category category = mapper.toEntity(categoryRequestDTO);
         categoryRepository.save(category);
 
+        logger.info("Category created successfully: {}", category.getId());
+
         return mapper.toResponseDTO(category);
     }
 
@@ -55,10 +58,10 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
-        logger.debug("Updating Category: {}", categoryRequestDTO.name());
-
         category.setName(categoryRequestDTO.name());
         category.setDescription(categoryRequestDTO.description());
+
+        logger.info("Category updated successfully: {}", category.getId());
 
         return mapper.toResponseDTO(
                 categoryRepository.save(category)
@@ -68,11 +71,18 @@ public class CategoryService {
     @Transactional
     public void delete(Long id) {
 
-        logger.debug("Deleting Category with id: {}", id);
+        logger.debug("Finding Category with id: {}", id);
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
+        logger.debug("Checking if contains products in category: {}", category.getName());
+
+        if(!category.getProducts().isEmpty()) {
+            throw new BusinessException("Cannot delete category because it has associated products.");
+        }
+
+        logger.info("Deleting Category with id: {}", id);
         categoryRepository.delete(category);
     }
 
@@ -84,5 +94,4 @@ public class CategoryService {
                 new HashSet<>(categoryRepository.findAll())
         );
     }
-
 }
