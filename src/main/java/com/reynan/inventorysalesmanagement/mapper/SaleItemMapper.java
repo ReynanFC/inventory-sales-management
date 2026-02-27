@@ -12,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface SaleItemMapper {
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id",  ignore = true)
     @Mapping(target = "product", ignore = true)
     @Mapping(target = "unitPrice", ignore = true)
     @Mapping(target = "sale", ignore = true)

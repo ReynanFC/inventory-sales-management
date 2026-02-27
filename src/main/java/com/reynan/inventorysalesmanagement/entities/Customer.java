@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,7 +53,7 @@ public class Customer implements Serializable {
     }
 
     public List<Sale> getSales() {
-        return sales;
+        return Collections.unmodifiableList(sales);
     }
 
     public String getEmail() {
@@ -105,10 +106,12 @@ public class Customer implements Serializable {
 
     public void addSale(Sale sale) {
         sales.add(sale);
+        sale.setCustomer(this);
     }
 
     public void removeSale(Sale sale) {
         sales.remove(sale);
+        sale.setCustomer(null);
     }
 
     @Override

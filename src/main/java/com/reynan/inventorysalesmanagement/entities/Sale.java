@@ -31,10 +31,10 @@ public class Sale implements Serializable {
     private SaleStatus saleStatus;
 
     @OneToMany(
-        mappedBy = "sale",
-        cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY,
-        orphanRemoval = true
+            mappedBy = "sale",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
     )
     private List<SaleItem> saleItems = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class Sale implements Serializable {
 
     public BigDecimal getTotalAmount() {
 
-       return saleItems.stream().map(SaleItem :: getSubTotal)
+        return saleItems.stream().map(SaleItem :: getSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal :: add);
     }
 

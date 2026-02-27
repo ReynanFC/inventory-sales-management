@@ -142,7 +142,7 @@ public class Product implements Serializable {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updateAt) {
         this.updatedAt = updatedAt;
     }
 
