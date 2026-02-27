@@ -53,6 +53,8 @@ public class CustomerService {
         Customer customer = mapper.toEntity(customerRequestDTO);
         customerRepository.save(customer);
 
+        logger.info("Customer created successfully: {}", customer.getId());
+
         return mapper.toResponseDTO(customer);
     }
 
@@ -64,11 +66,11 @@ public class CustomerService {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
 
-        logger.debug("Updating Customer: {}", customerRequestDTO.name());
-
         customer.setName(customerRequestDTO.name());
         customer.setEmail(customerRequestDTO.email());
         customer.setTelephone(customerRequestDTO.telephone());
+
+        logger.info("Customer updated successfully: {}", customer.getId());
 
         return mapper.toResponseDTO(
                 customerRepository.save(customer)
@@ -78,10 +80,12 @@ public class CustomerService {
         @Transactional
         public void delete(Long id) {
 
-            logger.debug("Deleting Customer with id: {}", id);
+            logger.debug("Finding Customer with id: {}", id);
 
             Customer customer = customerRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+
+            logger.info("Deleting Customer with id: {}", id);
 
             customerRepository.delete(customer);
         }
@@ -98,7 +102,5 @@ public class CustomerService {
         List<Sale> saleList = saleRepository.findByCustomerId(id);
 
         return saleMapper.toListResponseDTO(saleList);
-
         }
-
 }

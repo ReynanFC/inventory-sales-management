@@ -35,10 +35,9 @@ public class StockMovement implements Serializable {
 
     public StockMovement() {}
 
-    public StockMovement(Integer quantity, MovementType movementType, Product product) {
+    public StockMovement(Integer quantity, MovementType movementType) {
         this.quantity = quantity;
         this.movementType = movementType;
-        this.product = product;
     }
 
     public Long getId() {
