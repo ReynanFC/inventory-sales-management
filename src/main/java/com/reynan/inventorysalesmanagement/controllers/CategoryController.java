@@ -59,13 +59,13 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(obj);
     }
 
-    @PutMapping(value = "/{id}",
+    @PutMapping(
+            value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CategoryResponseDTO> update(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
-                                                      @PathVariable Long id
-    ) {
+                                                      @PathVariable Long id) {
 
         return ResponseEntity.ok().body(categoryService.update(id, categoryRequestDTO));
     }
