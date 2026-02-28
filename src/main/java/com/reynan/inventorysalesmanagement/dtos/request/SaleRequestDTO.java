@@ -16,8 +16,5 @@ public record SaleRequestDTO(
         SaleStatus saleStatus,
 
         @NotEmpty(message = "A sale must have at least one item")
-        List<SaleItemRequestDTO> items,
-
-        // Optional
-        LocalDateTime saleDate
+        List<SaleItemRequestDTO> items
 ) {}
