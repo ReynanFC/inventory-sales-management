@@ -1,5 +1,6 @@
 package com.reynan.inventorysalesmanagement.exceptions.handler;
 
+import com.reynan.inventorysalesmanagement.exceptions.BusinessException;
 import com.reynan.inventorysalesmanagement.exceptions.ResourceNotFoundException;
 import com.reynan.inventorysalesmanagement.exceptions.StandardError;
 import com.reynan.inventorysalesmanagement.exceptions.StockException;
@@ -43,33 +44,19 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(StockException.class)
-    public ResponseEntity<StandardError> handleStockException(StockException exception, HttpServletRequest request) {
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        String error = "Stock error";
-
-        return ResponseEntity.status(status)
-                .body(
-                        buildError(status, error, exception, request)
-                );
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<StandardError> handleResourceNotFound(ResourceNotFoundException exception, HttpServletRequest request) {
-
+    public ResponseEntity<StandardError> handleResourceNotFoundException(
+            ResourceNotFoundException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String error = "Resource not found";
 
         return ResponseEntity.status(status)
-                .body(
-                        buildError(status, error, exception, request)
-                );
+                .body(buildError(status, error, exception, request));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> handleResourceNotFound(MethodArgumentNotValidException exception, HttpServletRequest request) {
-
+    public ResponseEntity<StandardError> handleValidationException(
+            MethodArgumentNotValidException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String error = "Validation failed";
 
@@ -81,14 +68,32 @@ public class GlobalExceptionHandler {
                 .orElse("Validation error");
 
         return ResponseEntity.status(status)
-                .body(
-                        new StandardError(
-                                Instant.now(),
-                                status.value(),
-                                error,
-                                message,
-                                request.getRequestURI()
+                .body(new StandardError(
+                        Instant.now(),
+                        status.value(),
+                        error,
+                        message,
+                        request.getRequestURI()
                 ));
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> handleBusinessException(
+            BusinessException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String error = "Business rule violation";
+
+        return ResponseEntity.status(status)
+                .body(buildError(status, error, exception, request));
+    }
+
+    @ExceptionHandler(StockException.class)
+    public ResponseEntity<StandardError> handleStockException(
+            StockException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String error = "Stock error";
+
+        return ResponseEntity.status(status)
+                .body(buildError(status, error, exception, request));
+    }
 }
