@@ -16,6 +16,7 @@ public class StockMovement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDSTOCK_MOVEMENT")
     private Long id;
 
     @ManyToOne
