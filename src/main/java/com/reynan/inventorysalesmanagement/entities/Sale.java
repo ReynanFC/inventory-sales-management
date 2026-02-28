@@ -22,8 +22,8 @@ public class Sale implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_CUSTOMER")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ID_CUSTOMER",  nullable = false)
     private Customer customer;
 
     @Enumerated(EnumType.STRING)

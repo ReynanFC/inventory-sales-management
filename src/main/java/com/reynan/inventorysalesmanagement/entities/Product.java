@@ -40,8 +40,8 @@ public class Product implements Serializable {
     @Column(name = "MINIMUM_STOCK")
     private Integer minimumStock;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_CATEGORY")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ID_CATEGORY",  nullable = false)
     private Category category;
 
     @OneToMany(
