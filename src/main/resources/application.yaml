@@ -15,8 +15,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        open-in-view: false
+      open-in-view: false
 
-  logging:
+logging:
     level:
      com.reynan.inventorysalesmanagement: DEBUG

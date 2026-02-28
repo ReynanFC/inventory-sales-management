@@ -45,14 +45,14 @@ public class ProductService {
         this.stockMovementRepository = stockMovementRepository;
     }
 
-    public ProductResponseDTO findById(Long id) {
+    public ProductDetailResponseDTO findById(Long id) {
 
         logger.debug("Finding product by ID {}", id);
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
-        return mapperProduct.toResponseDTO(product);
+        return mapperProduct.toDetailResponseDTO(product);
     }
 
     @Transactional
@@ -60,7 +60,11 @@ public class ProductService {
 
         logger.debug("Creating new product {}", productRequestDTO.name());
 
+        Category category = categoryRepository.findById(productRequestDTO.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + productRequestDTO.categoryId()));
+
         Product product = mapperProduct.toEntity(productRequestDTO);
+        category.addProduct(product);
         productRepository.save(product);
 
         logger.info("Product created successfully: {}", product.getId());
@@ -89,6 +93,7 @@ public class ProductService {
         return mapperProduct.toDetailResponseDTO(product);
     }
 
+    @Transactional
     public void addStock(Long productId, StockMovementRequestDTO stockMovementRequestDTO) {
 
         logger.debug("Adding stock movement by ID {}", productId);

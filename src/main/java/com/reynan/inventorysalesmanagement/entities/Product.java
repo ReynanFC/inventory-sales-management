@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class Product implements Serializable {
     private String description;
 
     @Column(name = "QUANTITY_IN_STOCK")
-    private Integer quantityInStock;
+    private Integer quantityInStock = 0;
 
     @Column(name = "MINIMUM_STOCK")
     private Integer minimumStock;
@@ -46,15 +47,15 @@ public class Product implements Serializable {
 
     @OneToMany(
             mappedBy = "product",
-            cascade = CascadeType.PERSIST
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private List<StockMovement> stockMovements = new ArrayList<StockMovement>();
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
-    //The update cannot be valid for stock update but rather for StockMoviment
+    @CreationTimestamp
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
@@ -64,7 +65,6 @@ public class Product implements Serializable {
                    Integer minimumStock, BigDecimal price, String name) {
 
         this.category = category;
-        this.quantityInStock= 0;
         this.minimumStock = minimumStock;
         this.price = price;
         this.name = name;
@@ -130,11 +130,11 @@ public class Product implements Serializable {
         return Collections.unmodifiableList(stockMovements);
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -1,0 +1,110 @@
+package com.reynan.inventorysalesmanagement.controllers;
+
+import com.reynan.inventorysalesmanagement.dtos.request.ProductRequestDTO;
+import com.reynan.inventorysalesmanagement.dtos.request.StockMovementRequestDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.ProductDetailResponseDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.ProductResponseDTO;
+import com.reynan.inventorysalesmanagement.dtos.response.StockMovementResponseDTO;
+import com.reynan.inventorysalesmanagement.services.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ProductDetailResponseDTO> findById(@PathVariable Long id) {
+
+        return ResponseEntity.ok().body(productService.findById(id));
+    }
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<ProductResponseDTO>> productFindAll() {
+
+        List<ProductResponseDTO> products = productService.findAll()
+                .stream()
+                .toList();
+
+        return ResponseEntity.ok().body(products);
+    }
+
+    @GetMapping(
+            value = "/{id}/stock-movements",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Page<StockMovementResponseDTO>> showStockMoviments(
+            @PathVariable Long id, @PageableDefault(
+             page = 0,
+             size = 10,
+             sort = "movementDate",
+             direction = Sort.Direction.DESC
+    ) Pageable pageable) {
+
+        return ResponseEntity.accepted().body(productService.relatedMovements(id, pageable));
+    }
+
+    @PostMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ProductDetailResponseDTO> create(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
+
+        ProductDetailResponseDTO obj = productService.create(productRequestDTO);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(obj.id())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(obj);
+    }
+
+    @PostMapping(
+            value = "/{id}/stock",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> addStock(@PathVariable Long id,
+                                      @Valid @RequestBody StockMovementRequestDTO stockMovementRequestDTO) {
+
+        productService.addStock(id, stockMovementRequestDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ProductDetailResponseDTO> update(@PathVariable Long id,
+                                                           @Valid @RequestBody ProductRequestDTO  productRequestDTO) {
+        return ResponseEntity.ok().body(productService.update(id, productRequestDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        productService.delete(id);
+       return ResponseEntity.noContent().build();
+    }
+}
