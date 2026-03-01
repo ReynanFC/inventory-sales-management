@@ -20,6 +20,7 @@ public class Sale implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDSALE")
     private Long id;
 
     @ManyToOne(optional = false)
