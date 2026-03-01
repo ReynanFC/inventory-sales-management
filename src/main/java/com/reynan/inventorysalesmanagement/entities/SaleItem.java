@@ -14,6 +14,7 @@ public class SaleItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDSALE_ITEM")
     private Long id;
 
     @ManyToOne
@@ -32,11 +33,10 @@ public class SaleItem implements Serializable {
 
     public SaleItem() {}
 
-    public SaleItem(Sale sale, Product product, Integer quantity, BigDecimal price) {
-        this.sale = sale;
+    public SaleItem(Product product, Integer quantity,  BigDecimal unitPrice) {
         this.product = product;
         this.quantity = quantity;
-        this.unitPrice = price;
+        this.unitPrice = unitPrice;
     }
 
     public Long getId() {
