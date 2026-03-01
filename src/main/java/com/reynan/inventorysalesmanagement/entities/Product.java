@@ -36,7 +36,7 @@ public class Product implements Serializable {
     private String description;
 
     @Column(name = "QUANTITY_IN_STOCK")
-    private Integer quantityInStock;
+    private Integer quantityInStock = 0;
 
     @Column(name = "MINIMUM_STOCK")
     private Integer minimumStock;
@@ -65,7 +65,6 @@ public class Product implements Serializable {
                    Integer minimumStock, BigDecimal price, String name) {
 
         this.category = category;
-        this.quantityInStock= 0;
         this.minimumStock = minimumStock;
         this.price = price;
         this.name = name;

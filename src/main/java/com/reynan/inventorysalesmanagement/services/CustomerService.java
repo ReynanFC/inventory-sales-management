@@ -72,9 +72,7 @@ public class CustomerService {
 
         logger.info("Customer updated successfully: {}", customer.getId());
 
-        return mapper.toResponseDTO(
-                customerRepository.save(customer)
-        );
+        return mapper.toResponseDTO(customer);
     }
 
         @Transactional
@@ -98,9 +96,10 @@ public class CustomerService {
 
         public List<SaleResponseDTO> relatedSales(Long id) {
 
-        logger.debug("Finding related Sales for Customer with id: {}", id);
+        logger.debug("Finding related sales for customer id: {}", id);
         List<Sale> saleList = saleRepository.findByCustomerId(id);
 
+        logger.info("Found {} related sales for customer id: {}", saleList.size(), id);
         return saleMapper.toListResponseDTO(saleList);
         }
 }

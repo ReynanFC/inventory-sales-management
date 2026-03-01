@@ -20,6 +20,7 @@ public class Sale implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDSALE")
     private Long id;
 
     @ManyToOne(optional = false)
@@ -94,11 +95,6 @@ public class Sale implements Serializable {
     public void addSaleItem(SaleItem saleItem) {
         saleItems.add(saleItem);
         saleItem.setSale(this);
-    }
-
-    public void removeSaleItem(SaleItem saleItem) {
-        saleItems.remove(saleItem);
-        saleItem.setSale(null);
     }
 
     @Override
