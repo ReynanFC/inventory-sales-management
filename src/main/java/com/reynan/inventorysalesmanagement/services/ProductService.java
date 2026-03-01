@@ -102,12 +102,12 @@ public class ProductService {
     }
 
     @Transactional
-    public void createStockMoviment(Long ProductId, Integer quantity, MovementType movementType) {
+    public void createStockMoviment(Long productId, Integer quantity, MovementType movementType) {
 
-        logger.debug("Adding stock movement by ID {}", ProductId);
+        logger.debug("Adding stock movement by ID {}", productId);
 
-        Product product = productRepository.findById(ProductId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + ProductId));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
 
         StockMovement stockMovement = new StockMovement(quantity, movementType);
 
@@ -132,17 +132,23 @@ public class ProductService {
         return mapperProduct.toSetResponseDTO(new HashSet<>(productRepository.findAll()));
     }
 
-    public Page<StockMovementResponseDTO> relatedMovements(Long ProductId, Pageable pageable) {
+    public Page<StockMovementResponseDTO> relatedMovements(Long productId, Pageable pageable) {
 
-        logger.debug("Finding product by ID {}", ProductId);
+        logger.debug("Checking if product exists with id: {}", productId);
 
-         productRepository.findById(ProductId)
-                 .orElseThrow(() -> new ResourceNotFoundException("Product not fount with ID: " + ProductId));
+        if (!productRepository.existsById(productId)) {
+            logger.info("Product not found with id: {}", productId);
+            throw new ResourceNotFoundException("Product not found with ID: " + productId);
+        }
 
-        logger.debug("Finding all stock movement by product");
+        logger.debug("Fetching stock movements for product id: {} | page: {} | size: {}",
+                productId, pageable.getPageNumber(), pageable.getPageSize());
 
-        Page<StockMovement> page = stockMovementRepository.findByProductId(ProductId, pageable);
+        Page<StockMovement> page = stockMovementRepository.findByProductId(productId, pageable);
 
+        if (page.isEmpty()) {
+            logger.info("No stock movements found for product id: {}", productId);
+        }
         return page.map(stockMovementmapper :: toResponseDTO);
     }
 }
