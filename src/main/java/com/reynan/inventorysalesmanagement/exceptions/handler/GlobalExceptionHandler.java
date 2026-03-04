@@ -96,4 +96,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status)
                 .body(buildError(status, error, exception, request));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardError> handleIllegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String error = "Invalid request";
+
+        return ResponseEntity.status(status)
+                .body(buildError(status, error, exception, request));
+    }
 }
