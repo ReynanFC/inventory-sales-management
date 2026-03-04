@@ -12,12 +12,7 @@ public record SaleRequestDTO(
         @NotNull(message = "Customer ID is required")
         Long customerId,
 
-        @NotNull(message = "Sale status is required")
-        SaleStatus saleStatus,
-
         @NotEmpty(message = "A sale must have at least one item")
-        List<SaleItemRequestDTO> items,
+        List<SaleItemRequestDTO> items
 
-        // Optional
-        LocalDateTime saleDate
 ) {}

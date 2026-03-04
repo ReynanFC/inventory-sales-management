@@ -22,18 +22,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryResponseDTO> findById(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
 
-    @GetMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> findAll() {
 
         List<CategoryResponseDTO> categories = categoryService.findAll()
@@ -43,10 +38,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(categories);
     }
 
-    @PostMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping
     public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
 
         CategoryResponseDTO obj = categoryService.create(categoryRequestDTO);
@@ -59,18 +51,14 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(obj);
     }
 
-    @PutMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
                                                       @PathVariable Long id) {
 
         return ResponseEntity.ok().body(categoryService.update(id, categoryRequestDTO));
     }
 
-    @DeleteMapping(value ="/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 
         categoryService.delete(id);

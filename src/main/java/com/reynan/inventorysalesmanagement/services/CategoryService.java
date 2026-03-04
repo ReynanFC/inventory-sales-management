@@ -63,9 +63,7 @@ public class CategoryService {
 
         logger.info("Category updated successfully: {}", category.getId());
 
-        return mapper.toResponseDTO(
-                categoryRepository.save(category)
-        );
+        return mapper.toResponseDTO(category);
     }
 
     @Transactional

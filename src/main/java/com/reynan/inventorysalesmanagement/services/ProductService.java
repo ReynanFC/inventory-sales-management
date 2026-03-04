@@ -88,7 +88,6 @@ public class ProductService {
         category.addProduct(product);
 
         logger.info("Product updated successfully: {}", product.getId());
-        productRepository.save(product);
 
         return mapperProduct.toDetailResponseDTO(product);
     }

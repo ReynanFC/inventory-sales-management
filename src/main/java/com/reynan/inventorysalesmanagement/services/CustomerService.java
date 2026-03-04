@@ -72,9 +72,7 @@ public class CustomerService {
 
         logger.info("Customer updated successfully: {}", customer.getId());
 
-        return mapper.toResponseDTO(
-                customerRepository.save(customer)
-        );
+        return mapper.toResponseDTO(customer);
     }
 
         @Transactional

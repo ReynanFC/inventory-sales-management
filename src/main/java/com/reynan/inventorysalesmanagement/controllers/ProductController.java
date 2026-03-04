@@ -29,18 +29,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping("/{id}")
     public ResponseEntity<ProductDetailResponseDTO> findById(@PathVariable Long id) {
 
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
-    @GetMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> productFindAll() {
 
         List<ProductResponseDTO> products = productService.findAll()
@@ -50,10 +45,7 @@ public class ProductController {
         return ResponseEntity.ok().body(products);
     }
 
-    @GetMapping(
-            value = "/{id}/stock-movements",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping("/{id}/stock-movements")
     public ResponseEntity<Page<StockMovementResponseDTO>> showStockMoviments(
             @PathVariable Long id, @PageableDefault(
              page = 0,
@@ -65,10 +57,7 @@ public class ProductController {
         return ResponseEntity.accepted().body(productService.relatedMovements(id, pageable));
     }
 
-    @PostMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping
     public ResponseEntity<ProductDetailResponseDTO> create(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
 
         ProductDetailResponseDTO obj = productService.create(productRequestDTO);
@@ -81,10 +70,7 @@ public class ProductController {
         return ResponseEntity.created(uri).body(obj);
     }
 
-    @PostMapping(
-            value = "/{id}/stock",
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping("/{id}/stock")
     public ResponseEntity<?> addStock(@PathVariable Long id,
                                       @Valid @RequestBody StockMovementRequestDTO stockMovementRequestDTO) {
 
@@ -92,17 +78,13 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PutMapping("/{id}")
     public ResponseEntity<ProductDetailResponseDTO> update(@PathVariable Long id,
                                                            @Valid @RequestBody ProductRequestDTO  productRequestDTO) {
         return ResponseEntity.ok().body(productService.update(id, productRequestDTO));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         productService.delete(id);
        return ResponseEntity.noContent().build();

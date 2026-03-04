@@ -23,18 +23,13 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> findById(@PathVariable Long id){
 
         return ResponseEntity.ok().body(customerService.findById(id));
     }
 
-    @GetMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping
     public ResponseEntity<List<CustomerResponseDTO>> findAll(){
 
         List<CustomerResponseDTO> customers = customerService.findAll()
@@ -44,10 +39,7 @@ public class CustomerController {
         return ResponseEntity.ok().body(customers);
     }
 
-    @GetMapping(
-            value = "/{id}/sales",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping("/{id}/sales")
     public ResponseEntity<List<SaleResponseDTO>> relatedSales(@PathVariable Long id){
 
         List<SaleResponseDTO> sales = customerService.relatedSales(id);
@@ -55,10 +47,7 @@ public class CustomerController {
         return ResponseEntity.ok().body(sales);
     }
 
-    @PostMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping
     public ResponseEntity<CustomerResponseDTO> create(@Valid @RequestBody CustomerRequestDTO customerRequestDTO){
         CustomerResponseDTO obj = customerService.create(customerRequestDTO);
 
@@ -70,11 +59,7 @@ public class CustomerController {
         return ResponseEntity.created(uri).body(obj);
     }
 
-    @PutMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PutMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> update(@Valid @RequestBody CustomerRequestDTO customerRequestDTO,
                                                       @PathVariable Long id) {
 

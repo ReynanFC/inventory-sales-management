@@ -83,9 +83,50 @@ public class SaleService {
         Sale sale = saleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sale not found with ID: " + id));
 
+        SaleStatus currentStatus = sale.getSaleStatus();
+        SaleStatus newStatus = status.saleStatus();
+
+        if (currentStatus == newStatus) {
+            logger.info("Update ignored: sale id {} already has the status {}", id, currentStatus);
+            return;
+        }
+
+        if (!canTransitionTo(newStatus, currentStatus)){
+            throw new IllegalArgumentException("Invalid status transition");
+        }
+
+        if (newStatus == SaleStatus.CANCELED) {
+            revertStock(sale);
+        }
+
         sale.setSaleStatus(status.saleStatus());
-        saleRepository.save(sale);
-        logger.info("Sale id: {} updated to status {}", id, status.saleStatus());
+
+        logger.info("Sale id: {} updated from {} to {}", id,
+                sale.getSaleStatus(), newStatus);
+    }
+
+    public boolean canTransitionTo(SaleStatus newStatus, SaleStatus currentStatus) {
+
+        if (currentStatus == SaleStatus.PENDING &&
+                (newStatus == SaleStatus.COMPLETED || newStatus == SaleStatus.CANCELED)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void revertStock(Sale sale) {
+        logger.info("Reverting stock for canceled sale id: {}", sale.getId());
+
+        sale.getSaleItems().forEach(saleItem -> {
+            logger.debug("Reverting product id: {} | quantity: {}",
+                    saleItem.getProduct().getId(),
+                    saleItem.getQuantity());
+
+            saleItem.getProduct().
+                    addStockMoviment(
+                            new StockMovement(saleItem.getQuantity(), MovementType.ENTRY));
+        });
     }
 
     public Page<SaleResponseDTO> findAll(Pageable pageable) {
