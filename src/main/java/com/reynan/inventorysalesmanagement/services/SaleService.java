@@ -71,8 +71,8 @@ public class SaleService {
             product.addStockMoviment(new StockMovement(item.quantity(), MovementType.EXIT));
         });
 
-        saleRepository.save(sale);
         logger.info("Sale created successfully with id: {}", sale.getId());
+        customer.addSale(sale);
         return saleMapper.toResponseDTO(sale);
     }
 

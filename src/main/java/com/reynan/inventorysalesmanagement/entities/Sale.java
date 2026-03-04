@@ -97,11 +97,6 @@ public class Sale implements Serializable {
         saleItem.setSale(this);
     }
 
-    public void removeSaleItem(SaleItem saleItem) {
-        saleItems.remove(saleItem);
-        saleItem.setSale(null);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

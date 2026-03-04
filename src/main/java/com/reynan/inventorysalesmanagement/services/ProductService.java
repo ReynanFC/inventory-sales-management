@@ -122,6 +122,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
+        product.getCategory().removeProduct(product);
         productRepository.delete(product);
     }
 
