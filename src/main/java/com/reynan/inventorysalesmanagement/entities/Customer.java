@@ -45,12 +45,6 @@ public class Customer implements Serializable {
 
     public Customer() {}
 
-    public Customer(String name, String telephone, String email) {
-        this.name = name;
-        this.telephone = telephone;
-        this.email = email;
-    }
-
     public List<Sale> getSales() {
         return Collections.unmodifiableList(sales);
     }
@@ -106,11 +100,6 @@ public class Customer implements Serializable {
     public void addSale(Sale sale) {
         sales.add(sale);
         sale.setCustomer(this);
-    }
-
-    public void removeSale(Sale sale) {
-        sales.remove(sale);
-        sale.setCustomer(null);
     }
 
     @Override
