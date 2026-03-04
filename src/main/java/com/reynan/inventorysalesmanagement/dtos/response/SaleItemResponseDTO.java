@@ -6,6 +6,5 @@ public record SaleItemResponseDTO (
         Long productId,
         String productName,
         Integer quantity,
-        BigDecimal unitPrice,
-        BigDecimal subTotal
+        BigDecimal unitPrice
 ) {}
