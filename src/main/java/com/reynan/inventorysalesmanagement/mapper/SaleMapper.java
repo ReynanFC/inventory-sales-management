@@ -19,6 +19,7 @@ public interface SaleMapper {
     @Mapping(target = "customer", ignore = true)
     @Mapping(target = "saleItems", source = "items")
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "saleStatus", ignore = true)
     Sale toEntity(SaleRequestDTO requestDTO);
 
     @Mapping(target = "customerName", source = "customer.name")
