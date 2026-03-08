@@ -151,4 +151,24 @@ public class ProductService {
         }
         return page.map(stockMovementmapper :: toResponseDTO);
     }
+
+    public Page<ProductResponseDTO> showProductByCategory(Long categoryId,  Pageable pageable) {
+
+        logger.debug("Checking if category exists with id: {}", categoryId);
+
+        if (!categoryRepository.existsById(categoryId)) {
+            logger.info("Category not found with ID: {}", categoryId);
+            throw new ResourceNotFoundException("Category not found with ID: " + categoryId);
+        }
+        logger.debug("Fetching products for category id: {} | page: {} | size: {}",
+                categoryId, pageable.getPageNumber(), pageable.getPageSize());
+
+        Page<Product> page = productRepository.findByCategoryId(categoryId, pageable);
+
+        if (page.isEmpty()) {
+            logger.info("No products found for category id: {}", categoryId);
+        }
+
+        return page.map(mapperProduct :: toResponseDTO);
+    }
 }
