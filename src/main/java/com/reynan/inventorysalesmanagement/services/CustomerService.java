@@ -12,12 +12,10 @@ import com.reynan.inventorysalesmanagement.repository.CustomerRepository;
 import com.reynan.inventorysalesmanagement.repository.SaleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class CustomerService {
@@ -48,12 +46,10 @@ public class CustomerService {
     @Transactional
     public CustomerResponseDTO create(CustomerRequestDTO customerRequestDTO) {
 
-        logger.debug("Creating new Customer: {}", customerRequestDTO.name());
+        logger.info("Creating new Customer: {}", customerRequestDTO.name());
 
         Customer customer = mapper.toEntity(customerRequestDTO);
         customerRepository.save(customer);
-
-        logger.info("Customer created successfully: {}", customer.getId());
 
         return mapper.toResponseDTO(customer);
     }
@@ -61,7 +57,7 @@ public class CustomerService {
     @Transactional
     public CustomerResponseDTO update(long id, CustomerRequestDTO customerRequestDTO) {
 
-        logger.debug("Updating Customer with id: {}", id);
+        logger.info("Updating Customer with id: {}", id);
 
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
@@ -69,8 +65,6 @@ public class CustomerService {
         customer.setName(customerRequestDTO.name());
         customer.setEmail(customerRequestDTO.email());
         customer.setTelephone(customerRequestDTO.telephone());
-
-        logger.info("Customer updated successfully: {}", customer.getId());
 
         return mapper.toResponseDTO(customer);
     }
@@ -88,18 +82,38 @@ public class CustomerService {
             customerRepository.delete(customer);
         }
 
-        public Set<CustomerResponseDTO> findAll() {
+        public Page<CustomerResponseDTO> findAll(Pageable pageable) {
 
-        logger.debug("Finding all Customers");
-            return mapper.toSetResponseDTO(new HashSet<>(customerRepository.findAll()));
+            logger.debug("Fetching customers | page={} | size={}",
+                    pageable.getPageNumber(),
+                    pageable.getPageSize());
+
+            Page<Customer> customers = customerRepository.findAll(pageable);
+
+        if (customers.isEmpty()) {
+            logger.info("No customers found");
         }
 
-        public List<SaleResponseDTO> relatedSales(Long id) {
+        return customers.map(mapper::toResponseDTO);
+        }
 
-        logger.debug("Finding related sales for customer id: {}", id);
-        List<Sale> saleList = saleRepository.findByCustomerId(id);
+        public Page<SaleResponseDTO> relatedSales(Long id, Pageable pageable) {
 
-        logger.info("Found {} related sales for customer id: {}", saleList.size(), id);
-        return saleMapper.toListResponseDTO(saleList);
+            logger.debug("Fetching sales for customer | customerId={} | page={} | size={}",
+                    id,
+                    pageable.getPageNumber(),
+                    pageable.getPageSize());
+
+        if (!customerRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Customer not found with ID: " + id);
+        }
+
+        Page<Sale> sales = saleRepository.findByCustomerId(id, pageable);
+
+        if (sales.isEmpty()) {
+            logger.info("No sales found for customer id: {}", id);
+        }
+
+        return sales.map(saleMapper :: toResponseDTO);
         }
 }

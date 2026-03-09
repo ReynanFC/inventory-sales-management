@@ -71,13 +71,13 @@ public class SaleService {
             product.addStockMoviment(new StockMovement(item.quantity(), MovementType.EXIT));
         });
 
-        logger.info("Sale created successfully with id: {}", sale.getId());
         customer.addSale(sale);
         return saleMapper.toResponseDTO(sale);
     }
 
     @Transactional
     public void updateStatus (Long id, UpdateSaleStatusRequestDTO status) {
+
         logger.info("Updating status of sale id: {} to {}", id, status.saleStatus());
 
         Sale sale = saleRepository.findById(id)
@@ -111,11 +111,11 @@ public class SaleService {
                 (newStatus == SaleStatus.COMPLETED || newStatus == SaleStatus.CANCELED)) {
             return true;
         }
-
         return false;
     }
 
     public void revertStock(Sale sale) {
+
         logger.info("Reverting stock for canceled sale id: {}", sale.getId());
 
         sale.getSaleItems().forEach(saleItem -> {
@@ -130,12 +130,16 @@ public class SaleService {
     }
 
     public Page<SaleResponseDTO> findAll(Pageable pageable) {
+
         logger.debug("Fetching sales page: {}, size: {}",
                 pageable.getPageNumber(), pageable.getPageSize());
 
         Page<Sale> sales = saleRepository.findAll(pageable);
 
-        logger.info("Sales page retrieved successfully");
+        if (sales.isEmpty()) {
+            logger.info("No sales found");
+        }
+
         return sales.map(saleMapper :: toResponseDTO);
     }
 
