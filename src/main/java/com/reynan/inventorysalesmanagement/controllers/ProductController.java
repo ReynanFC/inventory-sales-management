@@ -12,13 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -37,13 +35,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> productFindAll() {
+    public ResponseEntity<Page<ProductResponseDTO>> productFindAll(
+            @ParameterObject @PageableDefault(
+                    page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC
+            ) Pageable pageable) {
 
-        List<ProductResponseDTO> products = productService.findAll()
-                .stream()
-                .toList();
-
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok().body(productService.findAll(pageable));
     }
 
     @GetMapping("/{id}/stock-movements")

@@ -5,13 +5,16 @@ import com.reynan.inventorysalesmanagement.dtos.response.CustomerResponseDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.SaleResponseDTO;
 import com.reynan.inventorysalesmanagement.services.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -30,21 +33,22 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponseDTO>> findAll(){
+    public ResponseEntity<Page<CustomerResponseDTO>> findAll(
+            @ParameterObject @PageableDefault(
+                    page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC
+            ) Pageable pageable){
 
-        List<CustomerResponseDTO> customers = customerService.findAll()
-                .stream()
-                .toList();
-
-        return ResponseEntity.ok().body(customers);
+        return ResponseEntity.ok().body(customerService.findAll(pageable));
     }
 
     @GetMapping("/{id}/sales")
-    public ResponseEntity<List<SaleResponseDTO>> relatedSales(@PathVariable Long id){
+    public ResponseEntity<Page<SaleResponseDTO>> relatedSales(
+            @PathVariable Long id, @ParameterObject @PageableDefault(
+                    page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC
+            ) Pageable pageable){
 
-        List<SaleResponseDTO> sales = customerService.relatedSales(id);
 
-        return ResponseEntity.ok().body(sales);
+        return ResponseEntity.ok().body(customerService.relatedSales(id, pageable));
     }
 
     @PostMapping

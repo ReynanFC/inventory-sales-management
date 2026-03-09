@@ -5,11 +5,11 @@ import com.reynan.inventorysalesmanagement.dtos.request.UpdateSaleStatusRequestD
 import com.reynan.inventorysalesmanagement.dtos.response.SaleResponseDTO;
 import com.reynan.inventorysalesmanagement.services.SaleService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,7 +34,7 @@ public class SaleController {
 
     @GetMapping
     public ResponseEntity<Page<SaleResponseDTO>> findAll(
-            @PageableDefault(
+           @ParameterObject @PageableDefault(
                     page = 0,
                     size = 10,
                     sort = "createdAt",
