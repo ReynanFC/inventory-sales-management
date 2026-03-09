@@ -7,6 +7,7 @@ import com.reynan.inventorysalesmanagement.dtos.response.ProductResponseDTO;
 import com.reynan.inventorysalesmanagement.dtos.response.StockMovementResponseDTO;
 import com.reynan.inventorysalesmanagement.services.ProductService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -35,25 +35,30 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> productFindAll() {
+    public ResponseEntity<Page<ProductResponseDTO>> productFindAll(
+            @ParameterObject @PageableDefault(
+                    page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC
+            ) Pageable pageable) {
 
-        List<ProductResponseDTO> products = productService.findAll()
-                .stream()
-                .toList();
-
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok().body(productService.findAll(pageable));
     }
 
     @GetMapping("/{id}/stock-movements")
     public ResponseEntity<Page<StockMovementResponseDTO>> showStockMoviments(
-            @PathVariable Long id, @PageableDefault(
-             page = 0,
-             size = 10,
-             sort = "movementDate",
-             direction = Sort.Direction.DESC
-    ) Pageable pageable) {
+            @PathVariable Long id, @ParameterObject @PageableDefault(
+             page = 0, size = 10, sort = "movementDate", direction = Sort.Direction.DESC
+            ) Pageable pageable) {
 
-        return ResponseEntity.accepted().body(productService.relatedMovements(id, pageable));
+        return ResponseEntity.ok().body(productService.relatedMovements(id, pageable));
+    }
+
+    @GetMapping("/by-category")
+    public ResponseEntity<Page<ProductResponseDTO>> showProductsByCategory(@RequestParam Long categoryId,
+           @ParameterObject @PageableDefault(
+                    page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC
+           ) Pageable pageable) {
+
+        return ResponseEntity.ok().body(productService.showProductByCategory(categoryId, pageable));
     }
 
     @PostMapping

@@ -22,9 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service
 public class ProductService {
 
@@ -67,14 +64,13 @@ public class ProductService {
         category.addProduct(product);
         productRepository.save(product);
 
-        logger.info("Product created successfully: {}", product.getId());
         return mapperProduct.toDetailResponseDTO(product);
     }
 
     @Transactional
     public ProductDetailResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
 
-        logger.debug("Updating product by ID {}", id);
+        logger.info("Updating product by ID {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
@@ -86,8 +82,6 @@ public class ProductService {
         product.setMinimumStock(productRequestDTO.minimumStock());
         product.setPrice(productRequestDTO.price());
         category.addProduct(product);
-
-        logger.info("Product updated successfully: {}", product.getId());
 
         return mapperProduct.toDetailResponseDTO(product);
     }
@@ -126,29 +120,58 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public Set<ProductResponseDTO> findAll() {
-        logger.debug("Finding all products");
+    public Page<ProductResponseDTO> findAll(Pageable pageable) {
 
-        return mapperProduct.toSetResponseDTO(new HashSet<>(productRepository.findAll()));
+        logger.debug("Fetching products | page={} | size={}",
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+        Page<Product> page = productRepository.findAll(pageable);
+
+        if (page.isEmpty()) {
+            logger.info("No products found");
+        }
+
+        return page.map(mapperProduct :: toResponseDTO);
     }
 
     public Page<StockMovementResponseDTO> relatedMovements(Long productId, Pageable pageable) {
 
-        logger.debug("Checking if product exists with id: {}", productId);
+        logger.debug("Fetching stock movements for product id: {} | page: {} | size: {}",
+                productId, pageable.getPageNumber(), pageable.getPageSize());
 
         if (!productRepository.existsById(productId)) {
             logger.info("Product not found with id: {}", productId);
             throw new ResourceNotFoundException("Product not found with ID: " + productId);
         }
 
-        logger.debug("Fetching stock movements for product id: {} | page: {} | size: {}",
-                productId, pageable.getPageNumber(), pageable.getPageSize());
-
         Page<StockMovement> page = stockMovementRepository.findByProductId(productId, pageable);
 
         if (page.isEmpty()) {
             logger.info("No stock movements found for product id: {}", productId);
         }
+
         return page.map(stockMovementmapper :: toResponseDTO);
+    }
+
+    public Page<ProductResponseDTO> showProductByCategory(Long categoryId,  Pageable pageable) {
+
+        logger.debug("Fetching products by category | categoryId={} | page={} | size={}",
+                categoryId,
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+        if (!categoryRepository.existsById(categoryId)) {
+            logger.info("Category not found with ID: {}", categoryId);
+            throw new ResourceNotFoundException("Category not found with ID: " + categoryId);
+        }
+
+        Page<Product> page = productRepository.findByCategoryId(categoryId, pageable);
+
+        if (page.isEmpty()) {
+            logger.info("No products found for category id: {}", categoryId);
+        }
+
+        return page.map(mapperProduct :: toResponseDTO);
     }
 }

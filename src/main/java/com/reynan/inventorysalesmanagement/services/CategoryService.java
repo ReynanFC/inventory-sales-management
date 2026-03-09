@@ -53,15 +53,13 @@ public class CategoryService {
     @Transactional
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
 
-        logger.debug("Updating Category with id: {}", id);
+        logger.info("Updating Category with id: {}", id);
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         category.setName(categoryRequestDTO.name());
         category.setDescription(categoryRequestDTO.description());
-
-        logger.info("Category updated successfully: {}", category.getId());
 
         return mapper.toResponseDTO(category);
     }

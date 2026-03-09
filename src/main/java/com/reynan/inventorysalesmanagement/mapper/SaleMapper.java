@@ -8,8 +8,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
         uses = SaleItemMapper.class)
@@ -26,6 +24,4 @@ public interface SaleMapper {
     @Mapping(target = "totalAmount", source = "totalAmount")
     @Mapping(target = "items", source = "saleItems")
     SaleResponseDTO toResponseDTO(Sale entity);
-
-    List<SaleResponseDTO> toListResponseDTO(List<Sale> saleList);
 }

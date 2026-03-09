@@ -9,8 +9,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.Set;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ProductMapper {
@@ -28,6 +26,4 @@ public interface ProductMapper {
     ProductDetailResponseDTO toDetailResponseDTO(Product entity);
 
     ProductResponseDTO toResponseDTO(Product entity);
-
-    Set<ProductResponseDTO> toSetResponseDTO(Set<Product> entities);
 }
