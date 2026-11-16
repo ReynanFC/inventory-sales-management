@@ -1,112 +1,144 @@
 # Inventory Sales Management
 
-Backend system for **inventory and sales management**, built with **Spring Boot**.
-
-The project provides a REST API responsible for managing products, sales, and inventory operations, following good backend architecture practices.
+REST API for **retail inventory and sales**, built with **Java 21 and Spring Boot**. The focus is on business rules and data consistency: every stock change is recorded as a movement, sales follow a status flow, and canceling a sale puts the items back in stock inside the same transaction.
 
 ---
 
-# 📚 Table of Contents
+## 📚 Table of Contents
 
-- [About the Project](#about-the-project)
-- [Technologies](#technologies)
-- [Requirements](#requirements)
-- [Database Configuration](#database-configuration)
-- [Running the Project](#running-the-project)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [UML Diagram](#uml-diagram)
-
----
-
-# 📖 About the Project
-
-This project was created to simulate a **real inventory and sales management system**, focusing on backend architecture and best development practices.
-
-The API handles:
-
-- Product management
-- Inventory control
-- Sales registration
-- Data persistence
-- Database versioning
+- [Business Rules](#-business-rules)
+- [Technologies](#-technologies)
+- [Endpoints](#-endpoints)
+- [Running the Project](#-running-the-project)
+- [Project Structure](#-project-structure)
+- [Database](#-database)
+- [UML Diagram](#-uml-diagram)
+- [Known Limitations and Next Steps](#-known-limitations-and-next-steps)
 
 ---
 
-# 🛠 Technologies
+## 📏 Business Rules
 
-The project was built using the following technologies:
+- **Stock is never edited directly.** Every change is a `StockMovement` (`ENTRY` or `EXIT`), so each product keeps a full history that can be queried.
+- **A sale cannot leave stock negative.** When a sale is created, each item generates an `EXIT` movement; if there is not enough stock, the whole sale is rolled back.
+- **The price is frozen at sale time.** Each `SaleItem` stores the product price when the sale was made, so later price changes don't affect old sales.
+- **Sales follow a status flow:** `PENDING → COMPLETED` or `PENDING → CANCELED`. Any other transition is rejected.
+- **Canceling a sale returns the items to stock** through `ENTRY` movements, in the same transaction as the status change.
+- **Errors are handled in one place** (`GlobalExceptionHandler`), with a standard error body for not-found resources, validation errors and stock errors.
 
-- **Java 21**
-- **Spring Boot**
-- **Spring Data JPA**
+---
+
+## 🛠 Technologies
+
+- **Java 21** and **Spring Boot 4**
+- **Spring Data JPA / Hibernate**
 - **MySQL**
-- **Flyway (Database Versioning)**
-- **MapStruct (Object Mapping)**
-- **OpenAPI / Swagger (API Documentation)**
-- **Maven**
+- **Flyway** for database migrations
+- **MapStruct** for Entity ↔ DTO mapping
+- **Bean Validation** for request validation
+- **OpenAPI / Swagger** for API documentation
+- **Maven** (wrapper included)
 
 ---
 
-# 📋 Requirements
+## 🔌 Endpoints
 
-Before running the project, make sure you have installed:
+Product, customer and sale lists are paginated (`?page=0&size=10`).
+
+| Resource | Method | Path | Description |
+|---|---|---|---|
+| Categories | `GET` | `/api/categories` | List categories |
+| | `GET` | `/api/categories/{id}` | Find by id |
+| | `POST` | `/api/categories` | Create |
+| | `PUT` | `/api/categories/{id}` | Update |
+| | `DELETE` | `/api/categories/{id}` | Delete |
+| Products | `GET` | `/api/products` | List products |
+| | `GET` | `/api/products/{id}` | Product details |
+| | `GET` | `/api/products/by-category?categoryId={id}` | Products in a category |
+| | `GET` | `/api/products/{id}/stock-movements` | Stock movement history |
+| | `POST` | `/api/products` | Create |
+| | `POST` | `/api/products/{id}/stock` | Add stock (`ENTRY` movement) |
+| | `PUT` | `/api/products/{id}` | Update |
+| | `DELETE` | `/api/products/{id}` | Delete |
+| Customers | `GET` | `/api/customers` | List customers |
+| | `GET` | `/api/customers/{id}` | Find by id |
+| | `GET` | `/api/customers/{id}/sales` | Sales of a customer |
+| | `POST` | `/api/customers` | Create |
+| | `PUT` | `/api/customers/{id}` | Update |
+| | `DELETE` | `/api/customers/{id}` | Delete |
+| Sales | `GET` | `/api/sales` | List sales |
+| | `GET` | `/api/sales/{id}` | Find by id |
+| | `POST` | `/api/sales` | Create a sale with items |
+| | `PATCH` | `/api/sales/{id}` | Change status (complete or cancel) |
+
+The full contract, with request and response models, is in Swagger once the app is running: <http://localhost:8080/swagger-ui/index.html>
+
+---
+
+## 🚀 Running the Project
+
+### Requirements
 
 - **Java 21**
-- **Maven**
-- **MySQL Server**
+- **MySQL 8**
 
----
-
-# 🗄 Database Configuration
-
-This project uses **MySQL** as the database.
-
-You have two options:
-
-### Option 1 — Create the same database used in the project
-
-Create a database with the name:
+### 1. Create the database
 
 ```sql
 CREATE DATABASE inventory_sales;
 ```
-### Option 2 — Change the database name in the project
 
-Open the file:
+Flyway creates the tables on startup.
 
-```plaintext
-src/main/resources/application.yml
+### 2. Set the credentials
+
+The database user and password come from environment variables:
+
+```bash
+export DB_USERNAME=root
+export DB_PASSWORD=your_password
 ```
 
-## And modify the database configuration:
+The connection URL is in `src/main/resources/application.yaml` (`jdbc:mysql://localhost:3306/inventory_sales`). Change it there if your MySQL runs on another host, port or database name.
+
+### 3. Run
+
+```bash
+git clone https://github.com/ReynanFC/inventory-sales-management.git
+cd inventory-sales-management
+./mvnw spring-boot:run
+```
+
+The API starts at <http://localhost:8080>.
+
+---
+
+## 📁 Project Structure
+
+Layered architecture:
 
 ```plaintext
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/inventory_sales
-    username: YOUR_USERNAME
-    password: YOUR_PASSWORD
+src/main/java/com/reynan/inventorysalesmanagement
+ ├─ controllers     HTTP layer: receives requests and returns responses
+ ├─ services        business rules and transactions
+ ├─ repository      database access with Spring Data JPA
+ ├─ entities        JPA entities and enums (SaleStatus, MovementType)
+ ├─ dtos            request and response objects
+ ├─ mapper          MapStruct mappers (Entity ↔ DTO)
+ └─ exceptions      custom exceptions and the global handler
+
+src/main/resources
+ ├─ application.yaml
+ └─ db/migration    Flyway migrations (V1 to V4)
 ```
-You can change:
 
-- database name
+---
 
-- username
+## 🗄 Database
 
-- password
+The schema is versioned with Flyway, from `V1__create_tables.sql` to `V4__add_default_quantity_in_stock.sql`, and Hibernate runs with `ddl-auto: none`, so the migrations are the only source of truth for the schema.
 
-according to your local MySQL configuration.
-
-## ⚠️ Database Naming Note
-
-In this project, the database attributes were created using **uppercase names**.
-
-This happened because the schema was initially created this way, and it was only noticed when the project was already close to completion and fully mapped using **JPA/Hibernate**.
-
-Although the project works correctly, the recommended best practice is to use **camelCase** (or snake_case) for database columns to keep naming conventions consistent and improve readability.
-
-Because of this, the following configuration was added in `application.yml`:
+**Note on column names:** the columns were created in uppercase, and this was only noticed when the entities were already mapped. To keep the names exactly as they are in the entities, the project uses:
 
 ```yaml
 spring:
@@ -116,87 +148,24 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 ```
 
-This configuration tells Hibernate to use the exact names defined in the entities, preventing it from automatically converting attribute names to another naming strategy.
-# 🚀 Running the Project
+In a new project I would use `snake_case` columns and keep Hibernate's default naming strategy.
 
-**Clone the repository:**
+---
 
-```plaintext
-git clone https://github.com/your-username/inventory-sales-management.git
-```
-**Enter the project folder:**
-```plaintext
-cd inventory-sales-management
-```
-**Build the project:**
-```plaintext
-mvn clean install
-```
-**Run the application:**
-```plaintext
-mvn spring-boot:run
-```
-The API will start at: [http://localhost:8080]
+## 📊 UML Diagram
 
-# 📄 API Documentation
+<img width="1500" height="604" alt="UML diagram" src="https://github.com/user-attachments/assets/4e2312ad-1cdd-478c-8ede-36f41ca875b3" />
 
-Swagger UI is available at: [http://localhost:8080/swagger-ui/index.html]
+---
 
-**Through Swagger you can:**
+## 🧭 Known Limitations and Next Steps
 
-- View all endpoints
+- **Automated tests:** the project only has the default context test. Next step: unit tests for the sale status flow and stock rules, and integration tests with Testcontainers + MySQL.
+- **Concurrency:** two sales for the same product at the same time could both pass the stock check. Next step: optimistic locking (`@Version`) or a pessimistic lock on the product row.
+- **Docker Compose:** add a `compose.yaml` with MySQL so the project runs with one command.
 
-- Test API requests
+---
 
-- Inspect request and response models
+## 👨‍💻 Author
 
-# 📁 Project Structure
-
-The project follows a layered architecture commonly used in Spring Boot applications.
-
-```plaintext
-src
- └─ main
-     └─ java
-         └─ com.project.inventory
-             ├─ controller
-             │
-             ├─ service
-             │
-             ├─ repository
-             │
-             ├─ entity
-             │
-             ├─ dto
-             │
-             ├─ mapper
-             │
-             └─ exception
-
-     └─ resources
-         ├─ application.yml
-         └─ db
-             └─ migration (Flyway migrations)
-```
-## Layers
-
-**Controller:** responsible for handling HTTP requests and returning responses.
-
-**Service:** contains the business logic of the application.
-
-**Repository:** handles database access using Spring Data JPA.
-
-**DTO:** Objects used for API input and output.
-
-**Mapper:** uses MapStruct to convert between Entity ↔ DTO.
-
-**Exception:** centralized exception handling for the API.
-
-# 📊 UML Diagram
-
-The following UML diagram represents the main entities and relationships used in the system.
-<img width="1500" height="604" alt="uml" src="https://github.com/user-attachments/assets/4e2312ad-1cdd-478c-8ede-36f41ca875b3" />
-
-# 👨‍💻 Author
-
-Developed for study and backend architecture practice using Spring Boot.
+**Reynan Ferreira** — [LinkedIn](https://linkedin.com/in/reynan-ferreira-correia-5518a0354) · [GitHub](https://github.com/ReynanFC)
